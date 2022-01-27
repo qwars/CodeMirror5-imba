@@ -4,7 +4,7 @@ Tag for CodeMirror v5 - mode Imba and imba-lint
 
 ## Install
 
-`git submodule add -b CodeMirror5 git@github.com:qwars/template-ui-kid.git patch-widgets-folder/codemirror`
+`git submodule add -b CodeMirror5 git@github.com:qwars/CodeMirror5-imba.git patch-widgets-folder/codemirror`
 
 `yarn add codemirror@5`
 
