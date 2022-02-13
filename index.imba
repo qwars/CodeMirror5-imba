@@ -48,6 +48,7 @@ export tag Widget
 		foldCode: true
 		autocorrect: true
 		autofocus: true
+		dragDrop: false
 		lineNumbers: true
 		lint: isLint
 		gutters: ["CodeMirror-lint-markers"]
@@ -55,16 +56,13 @@ export tag Widget
 	@classes = ['imba-codemirror']
 
 	def mount
-		CodeMirror.then do
-			@codemirror = $1 dom, Object.assign @_options:default, @options
-			Imba.commit
+		CodeMirror
+			.then( do @codemirror = $1 dom, Object.assign @_options:default, @options unless dom:children:length )
+			.then( do if data then setTimeout(&, 167) do @codemirror.setValue data )
+			.then( do @codemirror )
 
 	def cm
 		@codemirror
-
-	def setData v
-		@data = v
-		self
 
 	def render
 		<self .loading=!@codemirror>

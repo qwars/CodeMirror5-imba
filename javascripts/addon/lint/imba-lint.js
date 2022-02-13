@@ -5,8 +5,8 @@
     else mod(CodeMirror);
 })(function(CodeMirror) {
     "use strict";
-    CodeMirror.registerHelper("lint", "imba", function(text, cm) {
-        var found = [];
+    CodeMirror.registerHelper("lint", "imba", function(text) {
+        var timeout, found = [];
         const ImbaCompiler = require('imba/src/compiler/compiler');
         function itRegionError(e) {
             const terminator = e._options.tokens.filter(function(item){ return  ['TERMINATOR','INDENT'].includes( item._type ) })
@@ -28,7 +28,6 @@
         }
         try {
             let filename = 'Methods';
-            let source = text;
             if ( text.match(/def\s+initialize/) ){
                 filename = 'Class';
                 text = 'class ClassCompilerCodeMirrorStateTemp\n\t' + text.replace(/\n/g, "\n\t");
@@ -39,21 +38,9 @@
                 text = 'tag TagCompilerCodeMirrorStateTemp\n\t' + text.replace(/\n/g, "\n\t");
             }
             let compiled = ImbaCompiler.compile( text, { filename: filename } );
-            if ( Imba ) {
-                let cm = Imba.root().querySelector('.CodeMirror :focus');
-                while( cm ) {
-                    if( cm._dom.CodeMirror ) {
-                        cm._dom.CodeMirror.compiled = Object.assign(
-                            ( cm._dom.CodeMirror.compiled || {} ),
-                            {
-                                imba: Object.assign( compiled, { compiler: ImbaCompiler.compile } )
-                            });
-                        cm._dom.CodeMirror.compiled.imba.sourceCode = cm._dom.CodeMirror.getValue();
-                        break;
-                    }
-                    cm = cm.parent();
-                }
-                Imba.commit();
+            if (Imba) {
+                let ActiveLayer = Imba.getTagForDom( document.activeElement );
+                if ( ActiveLayer && ActiveLayer.parent().dom().offsetParent.CodeMirror ) ActiveLayer.trigger('compiled', compiled )
             }
         }
         catch(e) {
