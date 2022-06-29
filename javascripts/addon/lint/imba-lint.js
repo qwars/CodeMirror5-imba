@@ -40,7 +40,7 @@
             let compiled = ImbaCompiler.compile( text, { filename: filename } );
             if (Imba) {
                 let ActiveLayer = Imba.getTagForDom( document.activeElement );
-                if ( ActiveLayer && ActiveLayer.parent().dom().offsetParent.CodeMirror ) ActiveLayer.trigger('compiled', compiled )
+                if ( ActiveLayer && ActiveLayer.parent().dom().offsetParent && ActiveLayer.parent().dom().offsetParent.CodeMirror ) ActiveLayer.trigger('compiled', compiled )
             }
         }
         catch(e) {
