@@ -28,7 +28,7 @@
         }
         try {
             let filename = 'Methods';
-            if ( text.match(/def\s+initialize/) ){
+            if ( text.match(/def\s+initialize/) && !text.match(/def\s+render/) ){
                 filename = 'Class';
                 text = 'class ClassCompilerCodeMirrorStateTemp\n\t' + text.replace(/\n/g, "\n\t");
             }
@@ -39,14 +39,17 @@
             }
             let compiled = ImbaCompiler.compile( text, { filename: filename } );
             if (Imba) {
-                let ActiveLayer = Imba.getTagForDom( document.activeElement );
+                let ActiveLayer = Imba.cm || Imba.getTagForDom( document.activeElement );
                 if ( ActiveLayer && ActiveLayer.parent().dom().offsetParent && ActiveLayer.parent().dom().offsetParent.CodeMirror ) ActiveLayer.trigger('compiled', compiled )
             }
         }
         catch(e) {
-            console.log(e)
             if (e.region) itRegionError(e)
             else itMetaError(e)
+            if (Imba) {
+                let ActiveLayer = Imba.cm || Imba.getTagForDom( document.activeElement );
+                if ( ActiveLayer && ActiveLayer.parent().dom().offsetParent && ActiveLayer.parent().dom().offsetParent.CodeMirror ) ActiveLayer.trigger('input', ActiveLayer.parent().dom().textContent )
+            }
         }
         return found;
     });

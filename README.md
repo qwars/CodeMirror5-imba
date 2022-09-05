@@ -40,7 +40,7 @@ import Widget as ImbaCodeMirror from './path-widgets-folder/codemirror
 
 
 def inputValue e
-    console.log e.target.value
+    console.log e.data
 
 def render
     <self>

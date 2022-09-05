@@ -59,6 +59,10 @@ export tag Widget
 		CodeMirror
 			.then( do @codemirror = $1 dom, Object.assign @_options:default, @options unless dom:children:length )
 			.then( do if data then setTimeout(&, 167) do @codemirror.setValue data )
+			.then( do setTimeout(&, 167) do @codemirror:display:initinputstate = not @codemirror:display:wrapper.addEventListener(
+				'keyup',
+				do trigger( 'input', @codemirror.getValue ) if $1:key:length === 1 or ['Backspace', 'Enter'].includes $1:key
+			) unless @codemirror:display:initinputstate  )
 			.then( do @codemirror )
 
 	def cm
